@@ -93,3 +93,34 @@ const loadMealsByCategory = async () => {
 };
 
 loadMealsByCategory();
+
+// 6. OPEN MEAL DETAILS PAGE
+
+const openMeal = (id) => {
+    window.location.href = `meal.html?id=${id}`;
+};
+
+
+
+// 7. LOAD MEAL DETAILS (meal.html)
+
+const loadMealDetails = async () => {
+    const box = document.getElementById("mealDetails");
+    if (!box) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const res = await fetch(DETAILS_API + id);
+    const data = await res.json();
+    const meal = data.meals[0];
+
+    box.innerHTML = `
+        <h2>${meal.strMeal}</h2>
+        <img src="${meal.strMealThumb}" style="width:300px;border-radius:10px">
+        <p><b>Category:</b> ${meal.strCategory}</p>
+        <p style="margin-top:15px;"><b>Instructions:</b><br>${meal.strInstructions}</p>
+    `;
+};
+
+loadMealDetails();
