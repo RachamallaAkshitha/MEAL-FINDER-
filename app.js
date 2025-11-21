@@ -124,3 +124,33 @@ const loadMealDetails = async () => {
 };
 
 loadMealDetails();
+
+// 8. SEARCH FUNCTION (Homepage)
+
+const searchBtn = document.getElementById("searchBtn");
+
+if (searchBtn) {
+    searchBtn.addEventListener("click", async () => {
+        const text = document.getElementById("searchInput").value.trim();
+        const box = document.getElementById("categoryList");
+
+        const res = await fetch(SEARCH_API + text);
+        const data = await res.json();
+
+        box.innerHTML = "";
+
+        if (!data.meals) {
+            box.innerHTML = "<p>No meals found.</p>";
+            return;
+        }
+
+        data.meals.forEach(meal => {
+            box.innerHTML += `
+                <div class="card" onclick="openMeal('${meal.idMeal}')">
+                    <img src="${meal.strMealThumb}">
+                    <p>${meal.strMeal}</p>
+                </div>
+            `;
+        });
+    });
+}
