@@ -1,14 +1,13 @@
-// ===============================
+
 // API URLs
-// ===============================
+
 const CATEGORIES_API = "https://www.themealdb.com/api/json/v1/1/categories.php";
 const SEARCH_API = "https://www.themealdb.com/api/json/v1/1/search.php?s=";
 const FILTER_API = "https://www.themealdb.com/api/json/v1/1/filter.php?c=";
 const DETAILS_API = "https://www.themealdb.com/api/json/v1/1/lookup.php?i=";
 
-// ===============================
 // ELEMENTS
-// ===============================
+
 const toggleBtn = document.getElementById("toggleBtn");
 const closeBtn = document.getElementById("closeBtn");
 const sidebar = document.getElementById("sidebar");
@@ -19,9 +18,9 @@ const searchInput = document.getElementById("searchInput");
 const sectionHeaderTitle = document.querySelector(".section-header h2");
 const crumbText = document.getElementById("crumbText");
 
-// ===============================
+
 // SIDEBAR
-// ===============================
+
 if (toggleBtn) {
   toggleBtn.addEventListener("click", () => {
     if (sidebar) sidebar.classList.add("open");
@@ -39,9 +38,9 @@ document.addEventListener("click", (e) => {
   }
 });
 
-// ===============================
+
 // HELPERS
-// ===============================
+
 function slugEquals(a, b) {
   return String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase();
 }
@@ -67,9 +66,9 @@ function mealCard(meal, categoryName = "") {
   `;
 }
 
-// ===============================
+
 // NAVIGATION HELPERS
-// ===============================
+
 function openCategory(name) {
   window.location.href = `category.html?c=${encodeURIComponent(name)}`;
 }
@@ -81,9 +80,9 @@ function openMeal(id) {
 }
 window.openMeal = openMeal;
 
-// ===============================
+
 // LOAD CATEGORIES ON HOMEPAGE
-// ===============================
+
 async function loadCategories() {
   try {
     const res = await fetch(CATEGORIES_API);
@@ -116,9 +115,9 @@ async function loadCategories() {
   }
 }
 
-// ===============================
+
 // SEARCH ON HOMEPAGE
-// ===============================
+
 if (searchBtn) {
   searchBtn.onclick = () => {
     const q = (searchInput && searchInput.value || "").trim();
@@ -162,9 +161,9 @@ async function doSearch(text) {
   }
 }
 
-// ===============================
+
 // CATEGORY PAGE
-// ===============================
+
 async function loadMealsByCategory() {
   const titleEl = document.getElementById("catTitle");
   const descEl = document.getElementById("catDesc");
@@ -212,9 +211,9 @@ async function loadMealsByCategory() {
   }
 }
 
-// ===============================
+
 // MEAL DETAILS PAGE
-// ===============================
+
 async function loadMealDetails() {
   const detailsEl = document.getElementById("mealDetails");
   if (!detailsEl) return;

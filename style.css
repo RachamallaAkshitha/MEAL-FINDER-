@@ -729,7 +729,7 @@ meal-right {
 .measure-key {
   min-width: 28px;
   height: 28px;
-  /* background: #e86528; */
+  background: #e86528;
   color: #e86528;
   display: inline-grid;
   place-items: center;
