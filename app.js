@@ -10,7 +10,6 @@ if (toggleBtn) {
 
 if (closeBtn) {
     closeBtn.addEventListener("click", () => {
-        sidebar.style.right = "-300px";
     });
 }
 
