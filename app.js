@@ -43,18 +43,79 @@ const loadCategories = async () => {
                 <span class="cat-badge">${category.strCategory}</span>
             </div>
         `;
-
         if (sideList) {
+           
             sideList.innerHTML += `
-                <li onclick="openCategory('${category.strCategory}')">
-                    ${category.strCategory}
-                </li>
-            `;
+        <li onclick="showCategoryInPage('${category.strCategory}')">
+            ${category.strCategory}
+        </li>
+    `;
         }
     });
 };
 
 loadCategories();
+
+// CATEGORY DESCRIPTION
+
+async function showCategoryInPage(categoryName) {
+
+    const descBox = document.getElementById('categoryDesc');
+    const mealsGrid = document.getElementById('mealsGrid');
+    if (!descBox || !mealsGrid) return;
+
+    descBox.style.display = 'block';
+    descBox.innerHTML = '<p>Loading category info…</p>';
+    mealsGrid.innerHTML = '<p>Loading meals…</p>';
+
+    try {
+
+        const catRes = await fetch(CATEGORIES_API);
+        const catJson = await catRes.json();
+        const categoryObj = (catJson.categories || []).find(c => c.strCategory === categoryName);
+
+
+        if (categoryObj) {
+            const desc = categoryObj.strCategoryDescription || '';
+            const short = desc.length > 900 ? desc.slice(0, 900) + '…' : desc;
+            descBox.innerHTML = `
+                <h3 style="color:var(--accent); margin:0 0 8px;">${escapeHtml(categoryName)}</h3>
+                <p style="margin:0; color:#444; line-height:1.55;">${escapeHtml(short)}</p>
+            `;
+        } else {
+            descBox.innerHTML = `<p>No description found for ${escapeHtml(categoryName)}.</p>`;
+        }
+
+
+        const mRes = await fetch(FILTER_API + encodeURIComponent(categoryName));
+        const mJson = await mRes.json();
+        const meals = mJson.meals || [];
+
+        if (!meals.length) {
+            mealsGrid.innerHTML = '<p>No meals found for this category.</p>';
+            return;
+        }
+
+
+        mealsGrid.innerHTML = '';
+        meals.forEach(m => {
+            mealsGrid.innerHTML += `
+                <div class="card" onclick="openMeal('${m.idMeal}')">
+                    <img src="${m.strMealThumb}" alt="${escapeHtml(m.strMeal)}">
+                    <p style="margin-top:8px; font-weight:600; font-size:13px;">${escapeHtml(m.strMeal)}</p>
+                </div>
+            `;
+        });
+
+
+        descBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    } catch (err) {
+        descBox.innerHTML = '<p>Error loading category data.</p>';
+        mealsGrid.innerHTML = '';
+        console.error(err);
+    }
+}
 
 
 

@@ -127,7 +127,23 @@ body {
 }
 
 .section h2 {
+    display: inline-block;
     margin-bottom: 20px;
+    letter-spacing: 2px;
+    position: relative; 
+    z-index: 1;
+}
+
+.section h2::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;     
+    left: 0;
+    width: 50px;      
+    height: 4px;      
+    background: var(--accent);
+    border-radius: 2px;
+    z-index: 0;
 }
 
 /* Grid */
@@ -169,4 +185,18 @@ body {
   height:120px;
   object-fit:cover;
   border-radius: 6px;
+}
+
+.category-desc {
+    background: #fff;
+    border: 2px solid rgba(232,101,40,0.15);
+    padding: 18px;
+    border-radius: 6px;
+    color: #333;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+#mealsGrid .card {
+    text-align: center;
 }
