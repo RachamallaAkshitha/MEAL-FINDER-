@@ -69,6 +69,12 @@ body {
   z-index: 60;
 }
 
+.sidebar ul:hover{
+  color: #e86528;
+}
+
+
+
 .sidebar.open {
   right: 0;
 }
@@ -111,7 +117,7 @@ body {
 /* HERO */
 .hero {
   height: 360px;
-  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('./assets/images/image.jpg') center/cover no-repeat;
+  background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url('./assets/kitchen.jpg') center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -246,11 +252,11 @@ body {
 /* orange label badge like in images */
 .card .badge {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top:6px;
+  right: 6px;
   background: #e86528;
   color: #fff;
-  font-size: 12px;
+  font-size: 10px;
   padding: 6px 8px;
   border-radius: 6px;
   text-transform: uppercase;
