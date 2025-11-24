@@ -126,25 +126,11 @@ body {
     padding: 30px;
 }
 
-.section h2 {
-    display: inline-block;
+ .section h2 {
     margin-bottom: 20px;
-    letter-spacing: 2px;
-    position: relative; 
-    z-index: 1;
 }
 
-.section h2::after {
-    content: "";
-    position: absolute;
-    bottom: -8px;     
-    left: 0;
-    width: 50px;      
-    height: 4px;      
-    background: var(--accent);
-    border-radius: 2px;
-    z-index: 0;
-}
+
 
 /* Grid */
 .grid {
@@ -199,4 +185,25 @@ body {
 
 #mealsGrid .card {
     text-align: center;
+}
+
+
+
+
+.meals-heading {
+  font-size:18px;
+  letter-spacing:3px;
+  margin: 18px 0 8px;
+  display: inline-block;
+  position: relative;
+}
+
+.meals-heading::after {
+  content: "";
+  display:block;
+  width:44px;
+  height:4px;
+  background: #e86528;
+  border-radius:2px;
+  margin-top:8px;
 }

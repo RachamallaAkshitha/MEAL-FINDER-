@@ -24,6 +24,8 @@ const SEARCH_API = "https://www.themealdb.com/api/json/v1/1/search.php?s=";
 const FILTER_API = "https://www.themealdb.com/api/json/v1/1/filter.php?c=";
 const DETAILS_API = "https://www.themealdb.com/api/json/v1/1/lookup.php?i=";
 
+
+
 // 3. LOAD CATEGORIES ON HOMEPAGE
 
 const loadCategories = async () => {
@@ -40,82 +42,21 @@ const loadCategories = async () => {
         box.innerHTML += `
             <div class="card" onclick="openCategory('${category.strCategory}')">
                 <img src="${category.strCategoryThumb}">
-                <span class="cat-badge">${category.strCategory}</span>
+                <p>${category.strCategory}</p>
             </div>
         `;
+
         if (sideList) {
-           
             sideList.innerHTML += `
-        <li onclick="showCategoryInPage('${category.strCategory}')">
-            ${category.strCategory}
-        </li>
-    `;
+                <li onclick="openCategory('${category.strCategory}')">
+                    ${category.strCategory}
+                </li>
+            `;
         }
     });
 };
 
 loadCategories();
-
-// CATEGORY DESCRIPTION
-
-async function showCategoryInPage(categoryName) {
-
-    const descBox = document.getElementById('categoryDesc');
-    const mealsGrid = document.getElementById('mealsGrid');
-    if (!descBox || !mealsGrid) return;
-
-    descBox.style.display = 'block';
-    descBox.innerHTML = '<p>Loading category info…</p>';
-    mealsGrid.innerHTML = '<p>Loading meals…</p>';
-
-    try {
-
-        const catRes = await fetch(CATEGORIES_API);
-        const catJson = await catRes.json();
-        const categoryObj = (catJson.categories || []).find(c => c.strCategory === categoryName);
-
-
-        if (categoryObj) {
-            const desc = categoryObj.strCategoryDescription || '';
-            const short = desc.length > 900 ? desc.slice(0, 900) + '…' : desc;
-            descBox.innerHTML = `
-                <h3 style="color:var(--accent); margin:0 0 8px;">${escapeHtml(categoryName)}</h3>
-                <p style="margin:0; color:#444; line-height:1.55;">${escapeHtml(short)}</p>
-            `;
-        } else {
-            descBox.innerHTML = `<p>No description found for ${escapeHtml(categoryName)}.</p>`;
-        }
-
-
-        const mRes = await fetch(FILTER_API + encodeURIComponent(categoryName));
-        const mJson = await mRes.json();
-        const meals = mJson.meals || [];
-
-        if (!meals.length) {
-            mealsGrid.innerHTML = '<p>No meals found for this category.</p>';
-            return;
-        }
-
-
-        mealsGrid.innerHTML = '';
-        meals.forEach(m => {
-            mealsGrid.innerHTML += `
-                <div class="card" onclick="openMeal('${m.idMeal}')">
-                    <img src="${m.strMealThumb}" alt="${escapeHtml(m.strMeal)}">
-                    <p style="margin-top:8px; font-weight:600; font-size:13px;">${escapeHtml(m.strMeal)}</p>
-                </div>
-            `;
-        });
-
-
-        descBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    } catch (err) {
-        descBox.innerHTML = '<p>Error loading category data.</p>';
-        mealsGrid.innerHTML = '';
-        console.error(err);
-    }
-}
 
 
 
@@ -126,34 +67,93 @@ const openCategory = (name) => {
 };
 
 
+
 // 5. LOAD MEALS BY CATEGORY (category.html)
 
+// REPLACE existing loadMealsByCategory with this version
 const loadMealsByCategory = async () => {
     const title = document.getElementById("catTitle");
+    const descBox = document.getElementById("catDesc");   // your category.html uses id="catDesc"
     const list = document.getElementById("mealList");
 
-    if (!title || !list) return;
+    // if any of these are missing, we are not on category page — bail out
+    if (!title || !descBox || !list) return;
 
     const params = new URLSearchParams(window.location.search);
     const categoryName = params.get("c");
 
+    if (!categoryName) {
+        title.innerText = "Category";
+        descBox.style.display = "block";
+        descBox.innerHTML = "<p>No category selected.</p>";
+        list.innerHTML = "";
+        return;
+    }
+
+    // set title and show loading states
     title.innerText = categoryName;
+    descBox.style.display = "block";
+    descBox.innerHTML = "<p>Loading description…</p>";
+    list.innerHTML = "<p>Loading meals…</p>";
 
-    const res = await fetch(FILTER_API + categoryName);
-    const data = await res.json();
-    const meals = data.meals;
+    try {
+        // 1) Fetch category descriptions (one API returns all categories with descriptions)
+        const catRes = await fetch(CATEGORIES_API);
+        const catJson = await catRes.json();
+        const categoryObj = (catJson.categories || []).find(c => c.strCategory === categoryName);
 
-    meals.forEach(meal => {
-        list.innerHTML += `
-            <div class="card" onclick="openMeal('${meal.idMeal}')">
-                <img src="${meal.strMealThumb}">
-                <p>${meal.strMeal}</p>
-            </div>
-        `;
-    });
+        if (categoryObj) {
+            const shortDesc = (categoryObj.strCategoryDescription || '').slice(0, 900);
+            descBox.innerHTML = `
+                <h3 style="color:#e86528; margin:0 0 8px;">${escapeHtml(categoryName)}</h3>
+                <p style="margin:0;color:#333;line-height:1.6;">${escapeHtml(shortDesc)}</p>
+            `;
+        } else {
+            descBox.innerHTML = `<p>No description found for ${escapeHtml(categoryName)}.</p>`;
+        }
+
+        // 2) Fetch meals for this category
+        const res = await fetch(FILTER_API + encodeURIComponent(categoryName));
+        const data = await res.json();
+        const meals = data.meals || [];
+
+        // clear list and add heading + grid container
+        list.innerHTML = ''; // clear previous
+
+        if (!meals.length) {
+            // show a small message if no meals
+            list.innerHTML = '<p>No meals found for this category.</p>';
+            return;
+        }
+
+        // Optional: insert a "MEALS" heading above the grid (if your HTML doesn't already include one)
+        // If you added the heading in HTML (see step 2) you can remove the next line.
+        // list.insertAdjacentHTML('beforebegin', '<h3 class="meals-heading">MEALS</h3>');
+
+        // render meal cards (clear then populate)
+        meals.forEach(meal => {
+            list.innerHTML += `
+                <div class="card" onclick="openMeal('${encodeURIComponent(meal.idMeal)}')">
+                    <img src="${meal.strMealThumb}" alt="${escapeHtml(meal.strMeal)}">
+                    <p>${escapeHtml(meal.strMeal)}</p>
+                </div>
+            `;
+        });
+
+        // scroll the description into view (so user sees title + description)
+        descBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    } catch (err) {
+        console.error(err);
+        descBox.innerHTML = '<p>Error loading category data.</p>';
+        list.innerHTML = '';
+    }
 };
 
+
 loadMealsByCategory();
+
+
 
 // 6. OPEN MEAL DETAILS PAGE
 
@@ -186,6 +186,8 @@ const loadMealDetails = async () => {
 
 loadMealDetails();
 
+
+
 // 8. SEARCH FUNCTION (Homepage)
 
 const searchBtn = document.getElementById("searchBtn");
@@ -215,3 +217,5 @@ if (searchBtn) {
         });
     });
 }
+
+!!document.querySelector('.cat-badge')

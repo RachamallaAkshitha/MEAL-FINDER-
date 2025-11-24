@@ -15,14 +15,36 @@
         <div class="logo" onclick="location.href='index.html'" style="cursor:pointer;">
             <i class="fa-solid fa-house"></i> MEAL FINDER
         </div>
+        <i id="toggleBtn" class="fa-solid fa-bars menu-icon"></i>
     </header>
 
+    <!-- TOGGLE SIDEBAR -->
+    <aside id="sidebar" class="sidebar">
+        <i id="closeBtn" class="fa-solid fa-xmark close-icon"></i>
+        <ul id="sideList"></ul>
+    </aside>
+
+    <!-- SEARCH BAR-->
+    <section class="hero">
+        <div class="search-wrapper">
+            <input id="searchInput" type="text" placeholder="Search recipes here ...">
+            <button id="searchBtn" class="search-btn">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
+        <br>
+        <h1>What are your favorite cuisines?</h1>
+        <br><br>
+        <p>PERSONALIZE YOUR EXPERIENCE</p>
+    </section>
+
     <section class="section">
-        <h2 id="catTitle"></h2>
+        <div id="catDesc" class="category-desc" style="display:none;"></div>
+        <h3 class="meals-heading" aria-hidden="true">MEALS</h3>
         <div id="mealList" class="grid"></div>
     </section>
 
     <script src="app.js"></script>
 </body>
 
-</html>
+</html>z
