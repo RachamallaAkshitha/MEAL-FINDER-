@@ -40,7 +40,7 @@ const loadCategories = async () => {
         box.innerHTML += `
             <div class="card" onclick="openCategory('${category.strCategory}')">
                 <img src="${category.strCategoryThumb}">
-                <p>${category.strCategory}</p>
+                <span class="cat-badge">${category.strCategory}</span>
             </div>
         `;
 

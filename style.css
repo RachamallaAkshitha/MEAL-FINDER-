@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Poppins;
+    font-family: 'Inter', sans-serif;
 }
 
 body {
@@ -43,10 +43,31 @@ body {
 }
 
 .close-icon {
-    font-size: 25px;
-    cursor: pointer;
-    float: right;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  width: 30px;
+  height: 30px;
+  background: #fff;           
+  color: #e86528;             
+  border-radius: 50%;
+  border: 3px solid #e86528;  
+
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.2s ease;
+   line-height: 0;
+   padding-top: 2px;
+   padding-left: 4px;
 }
+
+.close-icon:hover {
+  border: 3px solid black; 
+  color: black;         
+}
+
 
 .sidebar ul {
     margin-top: 40px;
@@ -59,11 +80,18 @@ body {
     cursor: pointer;
 }
 
+.sidebar li:hover {
+    color: #e86528;           
+    transition: 0.2s;    
+}
+
 
 /* Search bar */
 .hero {
     height: 350px;
-    background: url('./assets/kitchen.jpg') center/cover;
+    background: 
+        linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),  
+        url('./assets/kitchen.jpg') center/cover no-repeat;
     text-align: center;
     color: white;
     padding-top: 80px;
@@ -110,15 +138,35 @@ body {
 }
 
 .card {
-    background: white;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    cursor: pointer;
+  position: relative;
+  background: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.cat-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #e86528;          /* orange */
+  color: #fff;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 3px 5px;
+  border-radius: 4px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;   /* BEEF, CHICKEN */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  z-index: 3;
 }
 
 .card img {
-    width: 100%;
-    border-radius: 10px;
+  display:block;
+  width:100%;
+  height:120px;
+  object-fit:cover;
+  border-radius: 6px;
 }
